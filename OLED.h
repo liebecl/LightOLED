@@ -1,1 +1,1 @@
-void OLED_Init(void);
+void OLED_Init(int fd);
