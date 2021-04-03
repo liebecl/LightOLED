@@ -26,3 +26,9 @@ void OLED_Init(int fd)
 {
 
 }
+
+/*写命令函数*/
+void WriteCmd(int fd, unsigned char I2C_Command)
+{
+  wiringPiI2CWriteReg8(fd,0x00,I2C_Command);
+}
