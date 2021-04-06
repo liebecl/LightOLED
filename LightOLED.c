@@ -24,11 +24,11 @@ int main(void)
 /*初始化OLED*/
 void OLED_Init(int fd)
 {
-  WriteCmd(fd, 0xAE);  	/*Display off 关掉屏幕*/
-  WriteCmd(fd, 0x20);	  /*Set Memory Addressing Mode:Horizontal Addressing Mode 水平刷写模式*/
-  WriteCmd(fd, 0x10);	  /*Set Higher Column Start Address for Page Addressing Mode*/
-  WriteCmd(fd, 0xB0);	  /*Set Page Start Address for Page Addressing Mode,PAGE0~PAGE7*/
-  WriteCmd(fd, 0xC8);	  /*Set COM Output Scan Direction*/
+  WriteCmd(fd, 0xAE);   /*Display off 关掉屏幕*/
+  WriteCmd(fd, 0x20);   /*Set Memory Addressing Mode:Horizontal Addressing Mode 水平刷写模式*/
+  WriteCmd(fd, 0x10);   /*Set Higher Column Start Address for Page Addressing Mode*/
+  WriteCmd(fd, 0xB0);   /*Set Page Start Address for Page Addressing Mode,PAGE0~PAGE7*/
+  WriteCmd(fd, 0xC8);   /*Set COM Output Scan Direction*/
   WriteCmd(fd, 0x00);   /*Set Lower Column Start Address for Page Addressing Mode 起始位置低位列0x00~0x0f */
   WriteCmd(fd, 0x40);   /*Set Display Start Line  起始行0x40~0x7F  正好是0~63*/
   WriteCmd(fd, 0x81); //--set contrast control register
