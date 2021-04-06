@@ -41,18 +41,24 @@ void OLED_Init(int fd)
   WriteCmd(fd, 0xA8);   /*Set Multiplex Ratio(16 to 64)*/
   WriteCmd(fd, 0x3F);   /*默认值是0x3F->63 63d, 64MUX*/
   
-  WriteCmd(fd, 0xa4); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
-  WriteCmd(fd, 0xd3); //-set display offset
-  WriteCmd(fd, 0x00); //-not offset 0x00为默认
-  WriteCmd(fd, 0xd5); //--set display clock divide ratio/oscillator frequency
-  WriteCmd(fd, 0xf0); //--set divide ratio
-  WriteCmd(fd, 0xd9); //--set pre-charge period
-  WriteCmd(fd, 0x22); //
-  WriteCmd(fd, 0xda); //--set com pins hardware configuration
-  WriteCmd(fd, 0x12);
-  WriteCmd(fd, 0xdb); //--set vcomh
-  WriteCmd(fd, 0x20); //0x20,0.77xVcc 默认
-  WriteCmd(fd, 0x8d); //--set DC-DC enable  
+  WriteCmd(fd, 0xA4);   /*Entire Display ON:0xA4,Output follows RAM content;0xA5,Output ignores RAM content*/
+  
+  WriteCmd(fd, 0xD3);   /*Set Display Offset*/
+  WriteCmd(fd, 0x00);   /*not offset 0x00为默认*/
+  
+  WriteCmd(fd, 0xD5);   /*Set Display Clock Divide Ratio/Oscillator Frequency 设置时钟分频因子,震荡频率*/
+  WriteCmd(fd, 0x80);   /*Set divide ratio [3:0],分频因子;[7:4],震荡频率*/
+  
+  WriteCmd(fd, 0xD9);   /*Set Pre-charge Period 设置预充电周期*/
+  WriteCmd(fd, 0x22);   /*[3:0],PHASE 1;[7:4],PHASE 2*/
+  
+  WriteCmd(fd, 0xDA);   /*Set COM Pins Hardware Configuration 设置COM硬件引脚配置*/
+  WriteCmd(fd, 0x12);   /*[5:4]配置*/
+  
+  WriteCmd(fd, 0xDB);   /*设置VCOMH 电压倍率*/
+  WriteCmd(fd, 0x20);   /*[6:4] 000,0.65*vcc;010,0.77*vcc;011,0.83*vcc*/
+  
+  WriteCmd(fd, 0x8D);   /*set DC-DC enable*/ 
   WriteCmd(fd, 0x14); //  0x14 enable  0x10 disabled（sleep）  一般用于交流电设置
   WriteCmd(fd, 0xAF); //--turn on oled panel
 }
