@@ -31,12 +31,16 @@ void OLED_Init(int fd)
   WriteCmd(fd, 0xC8);   /*Set COM Output Scan Direction*/
   WriteCmd(fd, 0x00);   /*Set Lower Column Start Address for Page Addressing Mode 起始位置低位列0x00~0x0f */
   WriteCmd(fd, 0x40);   /*Set Display Start Line  起始行0x40~0x7F  正好是0~63*/
-  WriteCmd(fd, 0x81); //--set contrast control register
-  WriteCmd(fd, 0xff); //亮度调节 0x00~0xff
-  WriteCmd(fd, 0xa1); //--set segment re-map 0 to 127
-  WriteCmd(fd, 0xa6); //--set normal display
-  WriteCmd(fd, 0xa8); //--set multiplex ratio(1 to 64)
-  WriteCmd(fd, 0x3F); // /*设置页，0x3f为默认，有效值为0~14 */
+  
+  WriteCmd(fd, 0x81);   /*Set Contrast Control 设置对比度*/
+  WriteCmd(fd, 0xFF);   /*亮度调节 0x00~0xFF*/
+  
+  WriteCmd(fd, 0xA1);   /*Set Segment Re-map 段重定义设置,bit0:0,0->0;1,0->127*/
+  WriteCmd(fd, 0xA6);   /*Set Normal/Inverse Display 设置显示方式;bit0:1,反相显示;0,正常显示*/
+  
+  WriteCmd(fd, 0xA8);   /*Set Multiplex Ratio(16 to 64)*/
+  WriteCmd(fd, 0x3F);   /*默认值是0x3F->63 63d, 64MUX*/
+  
   WriteCmd(fd, 0xa4); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
   WriteCmd(fd, 0xd3); //-set display offset
   WriteCmd(fd, 0x00); //-not offset 0x00为默认
