@@ -70,5 +70,5 @@ void WriteCmd(int fd, unsigned char I2C_Command)
 /*写数据函数*/
 void WriteData(int fd, unsigned char I2C_Data)
 {
-	wiringPiI2CWriteReg8(fd, 0x40, I2C_Data);
+  wiringPiI2CWriteReg8(fd, 0x40, I2C_Data);
 }
