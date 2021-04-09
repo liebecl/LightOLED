@@ -19,7 +19,11 @@ int main(void)
   OLED_Init(i2cHand);
   while(1)
   {
-  
+    OLED_Fill();
+		delay(1000);
+ 
+		OLED_CLS();
+		delay(1000);
   }
   return 0;
 }
@@ -74,4 +78,55 @@ void WriteCmd(int fd, unsigned char I2C_Command)
 void WriteData(int fd, unsigned char I2C_Data)
 {
   wiringPiI2CWriteReg8(fd, 0x40, I2C_Data);
+}
+
+/*设置坐标起点*/
+void OLED_SetPos(int fd,unsigned char x, unsigned char y)
+{
+	WriteCmd(fd, (unsigned char)(0xB0 + x));
+	WriteCmd(fd,((y & 0x0F) | 0x00));       /* LOW */
+	WriteCmd(fd,(((y & 0xF0) >> 4) | 0x10));/* HIGHT */
+}
+
+/*写缓存数据*/
+void Write_DataBuffer(void) /*这个是将DataBuffer数组里面的值，全部写进屏里去*/
+{
+	unsigned char i, j;
+ 
+	for (i = 0; i < 8; i++)
+	{
+		OLED_SetPos(i2cHand, i, 0); /*设置起始点坐标*/
+		for (j = 0; j < 128; j++)
+		{
+			WriteData(i2cHand, DataBuffer[i][j]); /*写数据*/
+		}
+	}
+}
+
+/*全屏填充 0xFF*/
+void OLED_Fill(void)
+{
+	int i, j;
+	for (i = 0; i < 8; i++)
+	{
+		for (j = 0; j < 128; j++)
+		{
+			DataBuffer[i][j] = 0xFF;
+		}
+	}
+	Write_DataBuffer();
+}
+
+/*清屏 0x00*/
+void OLED_CLS(void)
+{
+	unsigned char i, j;
+	for (i = 0; i < 8; i++)
+	{
+		for (j = 0; j < 128; j++)
+		{
+			DataBuffer[i][j] = 0x00;
+		}
+	}
+	Write_DataBuffer();
 }
