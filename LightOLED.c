@@ -20,10 +20,10 @@ int main(void)
   	OLED_Init(i2cHand);
   	while(1)
   	{
-    	OLED_Fill();
-    	delay(1000);
+    		OLED_Fill();
+    		delay(1000);
  
-    	OLED_CLS();
+    		OLED_CLS();
 		delay(1000);
   	}
   	return 0;
