@@ -65,6 +65,9 @@ void OLED_Init(int fd)
   
   	WriteCmd(fd, 0xDB);   /*设置VCOMH 电压倍率*/
   	WriteCmd(fd, 0x20);   /*[6:4] 000,0.65*vcc;010,0.77*vcc;011,0.83*vcc*/
+	
+	WriteCmd(fd, 0x8D);   /*允许电荷泵*/
+  	WriteCmd(fd, 0x14);   
   
   	WriteCmd(fd, 0xAF);   /*Display on 打开屏幕*/
 }
