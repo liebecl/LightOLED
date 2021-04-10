@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <wiringPi.h>
+#include <wiringPiI2C.h>
 #include "OLED.h"
 
 #define I2C_ADDRESS 0x3C
