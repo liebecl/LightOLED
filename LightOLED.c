@@ -5,7 +5,7 @@
 
 #define I2C_ADDRESS 0x3C
 
-/*全屏大小 8page页 * 128col列 * row64行  每页是8*128个格子，通过高低列组合出0~127的数据，寻找起始列进行从左向右填充*/
+/*全屏大小 8页 * 128列 * 64行  每页是8*128个格子，通过高低列组合出0~127的数据，寻找起始列进行从左向右填充*/
 /*每一页有128个数据, 每个数据由一列8个格子组成, 大小为0x00-0xFF*/
 unsigned char DataBuffer[8][128];
 int i2cHand = 0;
@@ -115,7 +115,7 @@ void OLED_Fill(void)
 	{
 		for (j = 0; j < 128; j++)
 		{
-			DataBuffer[i][j] = 0xFF;
+			DataBuffer[i][j] = 0xF0;
 		}
 	}
 	Write_DataBuffer();
