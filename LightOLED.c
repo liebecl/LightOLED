@@ -1,3 +1,4 @@
+#if 0
 #include <stdio.h>
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
@@ -134,6 +135,7 @@ void OLED_CLS(void)
 	}
 	Write_DataBuffer();
 }
+#endif
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -742,7 +744,7 @@ const unsigned char zi[] =
 0x00,0x02,0x01,0x02,0x02,0x04,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,//126
 };
 
-
+#if 0 
 void shijian(void)//当前时间
 {
         struct tm *ptr;
@@ -752,4 +754,5 @@ void shijian(void)//当前时间
         strftime(yi[1],16,"%m/%d %a",ptr); //月/日 周几
     strftime(yi[2],16,"%R %p",ptr);//时:分 am或pm
 }
+#endif
 
