@@ -3,20 +3,20 @@
 ****作者：kaipengc
 ****日期：2022-01-21
 ****关于OLED屏幕的操作：
-	1. 字体库数组中的位置和ACSII码的 十进制数字相对应，比如A 代表65；
-	2.每个字符占8列，总共128列，所以每一行可以容纳16个字符；
-	3.屏幕总共是8行，设计4条字符显示，每条字符容纳16个字符，所以分两行显示，第一行显示一个字符的前8个，第二行显示一个字符的后8个；
-	4. 0x40是操作数字，0x00是操作命令；
-	5.可以设定起始位置，行是0-7，列是0-127，列分两次设定，低4位和高4位。
+    1. 字体库数组中的位置和ACSII码的 十进制数字相对应，比如A 代表65；
+    2.每个字符占8列，总共128列，所以每一行可以容纳16个字符；
+    3.屏幕总共是8行，设计4条字符显示，每条字符容纳16个字符，所以分两行显示，第一行显示一个字符的前8个，第二行显示一个字符的后8个；
+    4. 0x40是操作数字，0x00是操作命令；
+    5.可以设定起始位置，行是0-7，列是0-127，列分两次设定，低4位和高4位。
 ****屏幕排布
     0 ******** 字符A的上半段 ******** ... ******** 0-16(128)
     1 ******** 字符A的下半段 ******** ... ********
-    2 ******** 				 ******** ... ********
-    3 ******** 				 ******** ... ********
-    4 ******** 				 ******** ... ********
-    5 ******** 				 ******** ... ********
-    6 ******** 				 ******** ... ********
-    7 ******** 				 ******** ... ********
+    2 ********               ******** ... ********
+    3 ********               ******** ... ********
+    4 ********               ******** ... ********
+    5 ********               ******** ... ********
+    6 ********               ******** ... ********
+    7 ********               ******** ... ********
 *****************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,26 +47,26 @@ int main(void)
     float data1 = 0;
     float data2 = 0;
 
-	initOLED();
-	delay(10);
-	clearDisplay();
-	delay(1000);
-	while(1)
-	{
-		displayData(data1,data2);
-		delay(10);
-	}
+    initOLED();
+    delay(10);
+    clearDisplay();
+    delay(1000);
+    while(1)
+    {
+        displayData(data1,data2);
+        delay(10);
+    }
 }
 
 //初始化OLED
 void initOLED(void)
 {
-	//树莓派硬件初始化
-	wiringPiSetup();
-	//获取I2C句柄
-	fd=wiringPiI2CSetup(I2C_ADDRESS);
-	//配置OLED芯片SSD1306
-	wiringPiI2CWriteReg8(fd,0x00,0xAE); //display off
+    //树莓派硬件初始化
+    wiringPiSetup();
+    //获取I2C句柄
+    fd=wiringPiI2CSetup(I2C_ADDRESS);
+    //配置OLED芯片SSD1306
+    wiringPiI2CWriteReg8(fd,0x00,0xAE); //display off
     wiringPiI2CWriteReg8(fd,0x00, 0x20);//Set Memory Addressing Mode
     wiringPiI2CWriteReg8(fd,0x00, 0x10);//00,Horizontal Addressing Mode;01,Vertical Addressing Mode;10,Page Addressing Mode (RESET);11,Invalid
     wiringPiI2CWriteReg8(fd,0x00, 0xB0);//Set Page Start Address for Page Addressing Mode,0-7
@@ -99,82 +99,82 @@ void initOLED(void)
 //清除屏幕
 void clearDisplay(void)
 {
-	//page:0-8,segment:0-127
-	uint8 page,segment;
-	for(page=0;page<8;page++)
-	{
-		//设置起始页面
-		wiringPiI2CWriteReg8(fd,0x00,0xB0+page);
-	    for(segment=0;segment<128;segment++)
-		{
-			wiringPiI2CWriteReg8(fd,0x40,0x00);
-	    }
-	}
+    //page:0-8,segment:0-127
+    uint8 page,segment;
+    for(page=0;page<8;page++)
+    {
+        //设置起始页面
+        wiringPiI2CWriteReg8(fd,0x00,0xB0+page);
+        for(segment=0;segment<128;segment++)
+        {
+            wiringPiI2CWriteReg8(fd,0x40,0x00);
+        }
+    }
 }
 
 //显示数据
 void displayData(float data1,float data2)
 {
-	//T.B.D 转换数字为字符
-	#if 0 
-    sprintf(Line2,"%f",data1);  	//float转换为char,并存入Line2
-	sprintf(Line4,"%f",data2);      //float转换为char,并存入Line4
-	#endif
-	
-    uint8 line;		//共4行，每一行占两个page
-	uint8 chaLoc;	//每一行的某个字符在字符库的位置，每一行字符最大16个，字符的ASCII码与字符库位置相匹配
-	uint8 index;	//定位到每个字符的某个元素的具体位置
-	for(line=0;line<4;line++)
+    //T.B.D 转换数字为字符
+    #if 0 
+    sprintf(Line2,"%f",data1);      //float转换为char,并存入Line2
+    sprintf(Line4,"%f",data2);      //float转换为char,并存入Line4
+    #endif
+    
+    uint8 line;     //共4行，每一行占两个page
+    uint8 chaLoc;   //每一行的某个字符在字符库的位置，每一行字符最大16个，字符的ASCII码与字符库位置相匹配
+    uint8 index;    //定位到每个字符的某个元素的具体位置
+    for(line=0;line<4;line++)
     {
-    	//定位到page0,page2,page4,page6
-		wiringPiI2CWriteReg8(fd,0x00,0xB0+(line*2));
+        //定位到page0,page2,page4,page6
+        wiringPiI2CWriteReg8(fd,0x00,0xB0+(line*2));
         for(chaLoc=0;chaLoc<16;chaLoc++)
         {
-        	//显示每行字符的上半段
-			for(index=0;index<8;index++)
+            //显示每行字符的上半段
+            for(index=0;index<8;index++)
             {
-            	if(line==0){
-					wiringPiI2CWriteReg8(fd,0x40,chaLib[Line1[chaLoc]*16+index]);
-            	}
+                if(line==0){
+                    wiringPiI2CWriteReg8(fd,0x40,chaLib[Line1[chaLoc]*16+index]);
+                }
                 else if(line==1){  
-					wiringPiI2CWriteReg8(fd,0x40,chaLib[Line2[chaLoc]*16+index]);
+                    wiringPiI2CWriteReg8(fd,0x40,chaLib[Line2[chaLoc]*16+index]);
                 }
                 else if(line==2){  
-					wiringPiI2CWriteReg8(fd,0x40,chaLib[Line3[chaLoc]*16+index]);
+                    wiringPiI2CWriteReg8(fd,0x40,chaLib[Line3[chaLoc]*16+index]);
                 }
                 else if(line==3){
-					wiringPiI2CWriteReg8(fd,0x40,chaLib[Line4[chaLoc]*16+index]);
+                    wiringPiI2CWriteReg8(fd,0x40,chaLib[Line4[chaLoc]*16+index]);
                 }
-				else{
-					//do nothing
-				}
+                else{
+                    //do nothing
+                }
             }
-		}
-		//定位到page1,page3,page5,page7
+        }
+        //定位到page1,page3,page5,page7
         wiringPiI2CWriteReg8(fd,0x00,0xB0+(line*2)+1);
         for(chaLoc=0;chaLoc<16;chaLoc++)
         {
-        	//显示每行字符的下半段
-        	for(index=0;index<8;index++)
+            //显示每行字符的下半段
+            for(index=0;index<8;index++)
             {
-            	if(line==0){
-					wiringPiI2CWriteReg8(fd,0x40,chaLib[Line1[chaLoc]*16+index+8]);
-            	}
+                if(line==0){
+                    wiringPiI2CWriteReg8(fd,0x40,chaLib[Line1[chaLoc]*16+index+8]);
+                }
                 else if(line==1){
-					wiringPiI2CWriteReg8(fd,0x40,chaLib[Line2[chaLoc]*16+index+8]);
+                    wiringPiI2CWriteReg8(fd,0x40,chaLib[Line2[chaLoc]*16+index+8]);
                 }
                 else if(line==2){
-					wiringPiI2CWriteReg8(fd,0x40,chaLib[Line3[chaLoc]*16+index+8]);
+                    wiringPiI2CWriteReg8(fd,0x40,chaLib[Line3[chaLoc]*16+index+8]);
                 }
                 else if(line==3){
-					wiringPiI2CWriteReg8(fd,0x40,chaLib[Line4[chaLoc]*16+index+8]);
+                    wiringPiI2CWriteReg8(fd,0x40,chaLib[Line4[chaLoc]*16+index+8]);
                 }
-				else{
-					//do nothing
-				}
+                else{
+                    //do nothing
+                }
             }
         }
-	}
+    }
 }
 
 
