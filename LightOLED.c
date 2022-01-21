@@ -50,6 +50,7 @@ int main(void)
 	initOLED();
 	delay(10);
 	clearDisplay();
+	delay(1000);
 	while(1)
 	{
 		displayData(data1,data2);
@@ -65,12 +66,34 @@ void initOLED(void)
 	//获取I2C句柄
 	fd=wiringPiI2CSetup(I2C_ADDRESS);
 	//配置OLED芯片SSD1306
-    wiringPiI2CWriteReg8(fd,0x00,0xA1);//Set Segment Re-map:column address 127 is mapped to SEG0
-    wiringPiI2CWriteReg8(fd,0x00,0xC8);//Set COM Output Scan Direction:remapped mode. Scan from COM[N-1] to COM0
-    wiringPiI2CWriteReg8(fd,0x00,0x8D);//允许电荷泵
-    wiringPiI2CWriteReg8(fd,0x00,0x14);
-    wiringPiI2CWriteReg8(fd,0x00,0xA6);//Set Normal/Inverse Display
-    wiringPiI2CWriteReg8(fd,0x00,0xAF);//Set Display ON/OFF
+	wiringPiI2CWriteReg8(fd,0x00,0xAE); //display off
+    wiringPiI2CWriteReg8(fd,0x00, 0x20);//Set Memory Addressing Mode
+    wiringPiI2CWriteReg8(fd,0x00, 0x10);//00,Horizontal Addressing Mode;01,Vertical Addressing Mode;10,Page Addressing Mode (RESET);11,Invalid
+    wiringPiI2CWriteReg8(fd,0x00, 0xB0);//Set Page Start Address for Page Addressing Mode,0-7
+    wiringPiI2CWriteReg8(fd,0x00, 0xC8);//Set COM Output Scan Direction
+    wiringPiI2CWriteReg8(fd,0x00, 0x00); //set low column address
+    wiringPiI2CWriteReg8(fd,0x00, 0x10); //set high column address
+    wiringPiI2CWriteReg8(fd,0x00, 0x40); //set start line address
+    wiringPiI2CWriteReg8(fd,0x00, 0x81); //-et contrast control register
+    wiringPiI2CWriteReg8(fd,0x00, 0xFF); //亮度调节 0x00~0xff
+    wiringPiI2CWriteReg8(fd,0x00, 0xA1); //set segment re-map 0 to 127
+    wiringPiI2CWriteReg8(fd,0x00, 0xA6); //set normal display
+    wiringPiI2CWriteReg8(fd,0x00, 0xA8); //set multiplex ratio(1 to 64)
+    wiringPiI2CWriteReg8(fd,0x00, 0x3F); 
+    wiringPiI2CWriteReg8(fd,0x00, 0xA4); //0xA4,Output follows RAM content;0xa5,Output ignores RAM content
+    wiringPiI2CWriteReg8(fd,0x00, 0xD3); //set display offset
+    wiringPiI2CWriteReg8(fd,0x00, 0x00); //not offset
+    wiringPiI2CWriteReg8(fd,0x00, 0xD5); //set display clock divide ratio/oscillator frequency
+    wiringPiI2CWriteReg8(fd,0x00, 0xF0); //set divide ratio
+    wiringPiI2CWriteReg8(fd,0x00, 0xD9); //set pre-charge period
+    wiringPiI2CWriteReg8(fd,0x00, 0x22); 
+    wiringPiI2CWriteReg8(fd,0x00, 0xDA); //set com pins hardware configuration
+    wiringPiI2CWriteReg8(fd,0x00, 0x12);
+    wiringPiI2CWriteReg8(fd,0x00, 0xDB); //set vcomh
+    wiringPiI2CWriteReg8(fd,0x00, 0x20); //0x20,0.77xVcc
+    wiringPiI2CWriteReg8(fd,0x00, 0x8D); //set DC-DC enable
+    wiringPiI2CWriteReg8(fd,0x00, 0x14); 
+    wiringPiI2CWriteReg8(fd,0x00,0xAF); //turn on oled panel
 }
 
 //清除屏幕
