@@ -36,8 +36,8 @@
 #include "OLED.h"
 
 int    fd;                          
-uint8  Line1[MAX_CHARACTER]={"Hello"};
-uint8  Line2[MAX_CHARACTER]={"My Raspberry Pi!"};
+uint8  Line1[MAX_CHARACTER]={" "};
+uint8  Line2[MAX_CHARACTER]={" "};
 uint8  Line3[MAX_CHARACTER]={"My IP Address:"};
 uint8  Line4[MAX_CHARACTER]={"192.168.31.165"};
 const uint8 chaLib[];
@@ -53,6 +53,8 @@ int main(void)
     delay(1000);
     while(1)
     {
+        getTime();
+        delay(1000);
         displayData(data1,data2);
         delay(10);
     }
@@ -177,6 +179,18 @@ void displayData(float data1,float data2)
     }
 }
 
+//获取当前时间
+void getTime(void)
+{
+    struct tm *ptr;
+    time_t lt;
+    lt=time(&lt);
+    ptr=localtime(&lt);
+    //月 日 周
+    strftime(Line1,16,"%m/%d %a",ptr);
+    //时 分 am或pm
+    strftime(Line2,16,"%R %p",ptr);
+}
 
 //字符库
 const unsigned char chaLib[] =
@@ -689,16 +703,4 @@ const unsigned char chaLib[] =
 /*--  宋体12;  此字体下对应的点阵为：宽x高=8x16   --*/
 0x00,0x02,0x01,0x02,0x02,0x04,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,//126
 };
-
-#if 0 
-void shijian(void)//当前时间
-{
-        struct tm *ptr;
-        time_t lt;
-        lt=time(&lt);
-        ptr=localtime(&lt);
-        strftime(yi[1],16,"%m/%d %a",ptr); //月/日 周几
-    strftime(yi[2],16,"%R %p",ptr);//时:分 am或pm
-}
-#endif
 

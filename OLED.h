@@ -6,5 +6,5 @@ typedef unsigned char uint8;
 void initOLED(void);
 void clearDisplay(void);
 void displayData(float data1,float data2);
-
+void getTime(void);
 
