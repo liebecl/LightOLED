@@ -34,12 +34,18 @@
 #include <wiringPiI2C.h>
 #include <unistd.h>
 #include "OLED.h"
+#include<sys/ioctl.h>
+#include<sys/socket.h>
+#include<arpa/inet.h>
+#include<netinet/in.h>
+#include<net/if.h>
 
-int    fd;                          
+
+int    fd;
 uint8  Line1[MAX_CHARACTER]={" "};
 uint8  Line2[MAX_CHARACTER]={" "};
 uint8  Line3[MAX_CHARACTER]={"My IP Address:"};
-uint8  Line4[MAX_CHARACTER]={"192.168.31.165"};
+uint8  Line4[MAX_CHARACTER]={""};
 const uint8 chaLib[];
 
 int main(void)
@@ -54,6 +60,7 @@ int main(void)
     while(1)
     {
         getTime();
+        getIp(Line4);
         delay(1000);
         displayData(data1,data2);
         delay(10);
@@ -191,6 +198,29 @@ void getTime(void)
     //时 分 am或pm
     strftime(Line2,16,"%R %p",ptr);
 }
+
+//获取树莓派IP
+void getIp(char *ip_buf)
+{
+    struct ifreq temp;
+    struct sockaddr_in *myaddr;
+    int fd = 0;
+    int ret = -1;
+    strcpy(temp.ifr_name, "eth0");
+    if((fd=socket(AF_INET, SOCK_STREAM, 0))<0)
+    {
+        printf("open the socket error\n\r");
+    }
+    ret = ioctl(fd, SIOCGIFADDR, &temp);
+    close(fd);
+    if(ret < 0)
+    {
+        printf("open the ioctl error\n\r");
+    }
+    myaddr = (struct sockaddr_in *)&(temp.ifr_addr);
+    strcpy(ip_buf, inet_ntoa(myaddr->sin_addr));
+}
+
 
 //字符库
 const unsigned char chaLib[] =

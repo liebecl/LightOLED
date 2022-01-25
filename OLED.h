@@ -7,4 +7,8 @@ void initOLED(void);
 void clearDisplay(void);
 void displayData(float data1,float data2);
 void getTime(void);
+void getIp(char *ip_buf);
+
+
+
 
